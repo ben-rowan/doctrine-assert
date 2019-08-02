@@ -43,14 +43,6 @@ abstract class AbstractDatabaseConstraint extends Constraint
         return $this->queryBuilder;
     }
 
-    /**
-     * @return EntityManagerInterface
-     */
-    protected function getEntityManager(): EntityManagerInterface
-    {
-        return $this->entityManager;
-    }
-
     protected function addCountSelect(string $rootEntityFqn, string $rootAlias): void
     {
         $this->getQueryBuilder()
