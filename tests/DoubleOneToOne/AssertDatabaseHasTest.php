@@ -55,22 +55,28 @@ class AssertDatabaseHasTest extends AbstractDoctrineAssertTest
     }
 
     /**
-     * @param array $names
+     * @param string $nameOne
+     * @param string $nameTwo
+     * @param string $nameThree
      *
      * @dataProvider nonMatchingNamesDataProvider
      */
-    public function testSettingNonMatchingQueryConfigFails(array $names): void
-    {
+    public function testSettingNonMatchingQueryConfigFails(
+        string $nameOne,
+        string $nameTwo,
+        string $nameThree
+    ): void {
+
         $this->expectException(ExpectationFailedException::class);
 
         $this->assertDatabaseHas(
             self::VFS_NAMESPACE . 'One',
             [
-                'name' => $names[0],
+                'name' => $nameOne,
                 self::VFS_NAMESPACE . 'Two' => [
-                    'name' => $names[1],
+                    'name' => $nameTwo,
                     self::VFS_NAMESPACE . 'Three' => [
-                        'name' => $names[2]
+                        'name' => $nameThree
                     ]
                 ]
             ]
@@ -80,15 +86,13 @@ class AssertDatabaseHasTest extends AbstractDoctrineAssertTest
     public function nonMatchingNamesDataProvider(): array
     {
         return [
-            [
-                'Name 1 is wrong'            => ['Wrong', 'Two',   'Three'],
-                'Name 2 is wrong'            => ['One',   'Wrong', 'Three'],
-                'Name 3 is wrong'            => ['One',   'Two',   'Wrong'],
-                'Names 1 and 2 are wrong'    => ['Wrong', 'Wrong', 'Three'],
-                'Names 2 and 3 are wrong'    => ['One',   'Wrong', 'Wrong'],
-                'Names 1 and 3 are wrong'    => ['Wrong', 'Two',   'Wrong'],
-                'Names 1, 2 and 3 are wrong' => ['Wrong', 'Wrong', 'Wrong']
-            ]
+            'Name 1 is wrong'            => ['Wrong', 'Two',   'Three'],
+            'Name 2 is wrong'            => ['One',   'Wrong', 'Three'],
+            'Name 3 is wrong'            => ['One',   'Two',   'Wrong'],
+            'Names 1 and 2 are wrong'    => ['Wrong', 'Wrong', 'Three'],
+            'Names 2 and 3 are wrong'    => ['One',   'Wrong', 'Wrong'],
+            'Names 1 and 3 are wrong'    => ['Wrong', 'Two',   'Wrong'],
+            'Names 1, 2 and 3 are wrong' => ['Wrong', 'Wrong', 'Wrong']
         ];
     }
 
