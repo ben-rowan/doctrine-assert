@@ -32,7 +32,11 @@ class AssertDatabaseCountTest extends AbstractDoctrineAssertTest
         $this->assertDatabaseCount(
             100,
             self::VFS_NAMESPACE . 'One',
-            []
+            [
+                self::VFS_NAMESPACE . 'Two' => [
+                    self::VFS_NAMESPACE . 'Three' => []
+                ]
+            ]
         );
     }
 
