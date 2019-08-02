@@ -6,7 +6,7 @@ A set of PHPUnit database assertions powered by Doctrine.
 
 ### Trait
 
-To add doctrine-assert to your tests you simply `use` the provided trait.
+To add `doctrine-assert` to your tests you simply `use` the provided trait in your test.
 
 ```php
 use DoctrineAssertTrait;
@@ -37,9 +37,9 @@ $this->assertDatabaseHas(
 
 Here we can see that we're joining `AnotherEntity::class` to `SomeEntity:class`, then
 `YetAnotherEntity::class` to `AnotherEntity::class` before asserting
-that the value of `active` on `YetAnotherEntity::class` in one or more cases is `true`;
+that the value of `active` on `YetAnotherEntity::class` is `true` in one or more cases.
 
-We can continue this nesting and joining as much as we need to including adding more than
+We can continue this nesting and joining as much as we need too including adding more than
 one join per entity.
 
 ```php
@@ -104,37 +104,65 @@ $this->assertDatabaseCount(
 );
 ```
 
-## Testing Framework
+## Testing
 
-### The Problem
+If you'd like to extend `doctrine-assert` or create a test case for a bug you've found
+then you'll need to be able to run the tests and create new ones.
+
+### Running The Tests
+
+Running the tests should be as simple as:
+
+```bash
+bash qa.bash
+```
+
+This will run:
+* [PHPStan](https://github.com/phpstan/phpstan)
+* [PHPMD](https://phpmd.org/)
+* [PHPUnit](https://phpunit.de/)
+
+If you'd also like to run the tests with [Infection](https://infection.github.io/)
+then use:
+
+```bash
+RUN_INFECTION='yes' bash qa.bash
+```
+
+You'll need to have [XDebug](https://xdebug.org/) installed for this to work though
+as it requires coverage to be generated.
+
+### Testing Framework
+
+#### The Problem
 
 In order to test the library we need to generate large numbers of entities as well
 as create the associated database schema. In order to keep this code self contained
 and save committing large numbers of test entities into the code base I've decided
 to make use of the virtual file system 
 [vfs://stream](http://vfs.bovigo.org/) and [sqlite](https://sqlite.org/index.html). This
-also has the side benefit of running everything in RAM making the test suite run
+also has the side benefit of running everything in RAM making the test suite
 really fast.
 
-### How The Test Suite Works
+#### How The Test Suite Works
 
 _Feel free to skip this section and move straight on to 'Creating A New Test'_
 
 The following process takes place before each test is run using `setUp()`.
 
-#### Virtual File System
+##### Virtual File System
 
 We first setup the [virtual file system](http://vfs.bovigo.org/). We copy over the Doctrine
 [YAML mapping](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/yaml-mapping.html)
-files that we'll later use to generate our test entities within the virtual file system.
+files that we'll later use to generate our test entities.
 
-#### Setup The Entity Manager
+##### Setup The Entity Manager
 
-#### Generate The Entities
+##### Generate The Entities
 
-#### Require The Generated Entities
+##### Require The Generated Entities
 
-#### Update The Database Schema
+##### Update The Database Schema
 
 ### Creating A New Test
 
