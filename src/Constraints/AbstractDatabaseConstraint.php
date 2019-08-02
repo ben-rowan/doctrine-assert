@@ -6,6 +6,7 @@ use BenRowan\DoctrineAssert\Config\QueryConfigIterator;
 use BenRowan\DoctrineAssert\Dql\AssertJoin\AssertJoin;
 use BenRowan\DoctrineAssert\Dql\AssertJoin\AssertJoinInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\Constraint\Constraint;
 
@@ -44,9 +45,9 @@ abstract class AbstractDatabaseConstraint extends Constraint
     }
 
     /**
-     * @return EntityManager
+     * @return EntityManagerInterface
      */
-    protected function getEntityManager(): EntityManager
+    protected function getEntityManager(): EntityManagerInterface
     {
         return $this->entityManager;
     }
@@ -58,26 +59,6 @@ abstract class AbstractDatabaseConstraint extends Constraint
                 $this->getQueryBuilder()->expr()->count($rootAlias)
             )
             ->from($rootEntityFqn, $rootAlias);
-    }
-
-    private function cleanAlias(string $dirtyAlias): string
-    {
-        return \str_replace(
-            ['\\', '.'],
-            '_',
-            $dirtyAlias
-        );
-    }
-    
-    private function addWhere($value, string $field, string $alias): void
-    {
-        $placeholder = $alias . '_' . $this->cleanAlias($field);
-
-        $this->getQueryBuilder()
-            ->andWhere(
-                $this->getQueryBuilder()->expr()->eq("$alias.$field", ":$placeholder")
-            )
-            ->setParameter($placeholder, $value);
     }
 
     /**
@@ -99,29 +80,6 @@ abstract class AbstractDatabaseConstraint extends Constraint
         }
 
         return $parentAlias . '_' . $childAlias;
-    }
-
-    private function buildChildQuery(
-        QueryConfigIterator $queryConfig,
-        string $childEntityFqn,
-        string $parentEntityFqn,
-        string $parentAlias
-    ): void {
-
-        $childAlias = $this->fqnToAlias($childEntityFqn, $parentAlias);
-
-        $this->join->add(
-            $childEntityFqn,
-            $childAlias,
-            $parentEntityFqn,
-            $parentAlias
-        );
-
-        $this->buildQuery(
-            $queryConfig,
-            $childEntityFqn,
-            $childAlias
-        );
     }
 
     protected function buildQuery(
@@ -169,12 +127,55 @@ abstract class AbstractDatabaseConstraint extends Constraint
      *
      * @return int
      *
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     protected function resultCount(): int
     {
         return (int) $this->getQueryBuilder()
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    private function cleanAlias(string $dirtyAlias): string
+    {
+        return \str_replace(
+            ['\\', '.'],
+            '_',
+            $dirtyAlias
+        );
+    }
+
+    private function buildChildQuery(
+        QueryConfigIterator $queryConfig,
+        string $childEntityFqn,
+        string $parentEntityFqn,
+        string $parentAlias
+    ): void {
+
+        $childAlias = $this->fqnToAlias($childEntityFqn, $parentAlias);
+
+        $this->join->add(
+            $childEntityFqn,
+            $childAlias,
+            $parentEntityFqn,
+            $parentAlias
+        );
+
+        $this->buildQuery(
+            $queryConfig,
+            $childEntityFqn,
+            $childAlias
+        );
+    }
+
+    private function addWhere($value, string $field, string $alias): void
+    {
+        $placeholder = $alias . '_' . $this->cleanAlias($field);
+
+        $this->getQueryBuilder()
+            ->andWhere(
+                $this->getQueryBuilder()->expr()->eq("$alias.$field", ":$placeholder")
+            )
+            ->setParameter($placeholder, $value);
     }
 }
