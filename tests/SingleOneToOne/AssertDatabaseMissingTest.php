@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace BenRowan\DoctrineAssert\Tests;
+namespace BenRowan\DoctrineAssert\Tests\SingleOneToOne;
 
 use BenRowan\DoctrineAssert\DoctrineAssertTrait;
+use BenRowan\DoctrineAssert\Tests\AbstractDoctrineAssertTest;
 use Faker\Factory;
 use Faker\ORM\Doctrine\Populator;
 use PHPUnit\Framework\ExpectationFailedException;
