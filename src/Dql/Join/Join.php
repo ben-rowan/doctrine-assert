@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr\Join as DoctrineJoin;
 
-class Join implements JoinInterface
+class Join
 {
     private $queryBuilder;
 
