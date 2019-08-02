@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-binDir='vendor/bin/';
+readonly binDir='vendor/bin/';
+readonly xdebugPhpunit=${XDEBUG_PHPUNIT:-'no'};
+readonly runInfection=${RUN_INFECTION:-'no'};
 
 echo "
     Running PHPStan
@@ -15,14 +17,19 @@ echo "
 ${binDir}phpmd src,tests text cleancode,codesize,controversial,design,naming,unusedcode;
 
 echo "
-    Running PHPUnit
+    Running Tests
 ";
 
 phpunitCommand="${binDir}phpunit tests";
 
-if [[ XDEBUG_PHPUNIT == 'yes' ]]
+if [[ ${xdebugPhpunit} == 'yes' ]]
 then
     phpunitCommand="XDEBUG_CONFIG='idekey=PHPSTORM' ${phpunitCommand}";
 fi
 
 php ${phpunitCommand};
+
+if [[ ${runInfection} == 'yes' ]]
+then
+    ${binDir}infection --coverage=var/coverage --min-msi=60 --min-covered-msi=70;
+fi

@@ -1,4 +1,12 @@
-<phpunit
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/|version|/phpunit.xsd">
+<phpunit colors="true">
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="var/coverage"/>
+        <log type="coverage-xml" target="var/coverage/coverage-xml"/>
+        <log type="junit" target="var/coverage/phpunit.junit.xml"/>
+    </logging>
 </phpunit>
