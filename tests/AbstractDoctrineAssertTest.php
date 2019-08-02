@@ -25,6 +25,8 @@ abstract class AbstractDoctrineAssertTest extends TestCase
     public const ENTITY_GEN_NUM_SPACES           = 4;
     public const ENTITY_GEN_BACKUP_EXISTING      = false;
 
+    use GeneratorTrait;
+
     /**
      * @var EntityManager
      */
@@ -51,9 +53,17 @@ abstract class AbstractDoctrineAssertTest extends TestCase
 
     abstract protected function getVfsPath(): string;
 
-    public function getRootDir()
+    protected function getRootDir()
     {
         return $this->rootDir;
+    }
+
+    /**
+     * @return EntityManager
+     */
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->entityManager;
     }
 
     private function setupVfs(): void
@@ -61,14 +71,6 @@ abstract class AbstractDoctrineAssertTest extends TestCase
         $this->rootDir = vfsStream::setup();
 
         vfsStream::copyFromFileSystem($this->getVfsPath());
-    }
-
-    /**
-     * @return EntityManager
-     */
-    public function getEntityManager(): EntityManager
-    {
-        return $this->entityManager;
     }
 
     /**
