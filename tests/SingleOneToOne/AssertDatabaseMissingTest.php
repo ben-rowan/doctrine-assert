@@ -1,16 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace BenRowan\DoctrineAssert\Tests\Single;
+namespace BenRowan\DoctrineAssert\Tests;
 
 use BenRowan\DoctrineAssert\DoctrineAssertTrait;
-use BenRowan\DoctrineAssert\Tests\AbstractDoctrineAssertTest;
 use Faker\Factory;
 use Faker\ORM\Doctrine\Populator;
 use PHPUnit\Framework\ExpectationFailedException;
 
 class AssertDatabaseMissingTest extends AbstractDoctrineAssertTest
 {
-    public const VFS_NAMESPACE = 'Vfs\\Single\\';
+    public const VFS_NAMESPACE = 'Vfs\\SingleOneToOne\\';
 
     use DoctrineAssertTrait;
 
@@ -26,11 +25,12 @@ class AssertDatabaseMissingTest extends AbstractDoctrineAssertTest
         $generator = Factory::create();
         $populator = new Populator($generator, $this->getEntityManager());
 
-        $populator->addEntity(self::VFS_NAMESPACE . 'Thing', 1);
+        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1);
+        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 1);
         $populator->execute();
 
         $this->assertDatabaseMissing(
-            self::VFS_NAMESPACE . 'Thing',
+            self::VFS_NAMESPACE . 'One',
             []
         );
     }
@@ -42,20 +42,20 @@ class AssertDatabaseMissingTest extends AbstractDoctrineAssertTest
         $generator = Factory::create();
         $populator = new Populator($generator, $this->getEntityManager());
 
-        $populator->addEntity(
-            self::VFS_NAMESPACE . 'Thing',
-            1,
+        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 1,
             [
-                'name' => 'Thing'
+                'active' => true
             ]
         );
-
+        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1);
         $populator->execute();
 
         $this->assertDatabaseMissing(
-            self::VFS_NAMESPACE . 'Thing',
+            self::VFS_NAMESPACE . 'One',
             [
-                'name' => 'Thing'
+                self::VFS_NAMESPACE . 'Two' => [
+                    'active' => true
+                ]
             ]
         );
     }
@@ -65,20 +65,20 @@ class AssertDatabaseMissingTest extends AbstractDoctrineAssertTest
         $generator = Factory::create();
         $populator = new Populator($generator, $this->getEntityManager());
 
-        $populator->addEntity(
-            self::VFS_NAMESPACE . 'Thing',
-            1,
+        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 1,
             [
-                'name' => 'Thing'
+                'active' => true
             ]
         );
-
+        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1);
         $populator->execute();
 
         $this->assertDatabaseMissing(
-            self::VFS_NAMESPACE . 'Thing',
+            self::VFS_NAMESPACE . 'One',
             [
-                'name' => 'Something'
+                self::VFS_NAMESPACE . 'Two' => [
+                    'active' => false
+                ]
             ]
         );
     }

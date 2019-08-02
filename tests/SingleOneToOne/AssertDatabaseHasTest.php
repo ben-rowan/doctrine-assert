@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace BenRowan\DoctrineAssert\Tests\Single;
+namespace BenRowan\DoctrineAssert\Tests\SingleOneToOne;
 
 use BenRowan\DoctrineAssert\DoctrineAssertTrait;
 use BenRowan\DoctrineAssert\Tests\AbstractDoctrineAssertTest;
@@ -10,7 +10,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 
 class AssertDatabaseHasTest extends AbstractDoctrineAssertTest
 {
-    public const VFS_NAMESPACE = 'Vfs\\Single\\';
+    public const VFS_NAMESPACE = 'Vfs\\SingleOneToOne\\';
 
     use DoctrineAssertTrait;
 
@@ -24,11 +24,12 @@ class AssertDatabaseHasTest extends AbstractDoctrineAssertTest
         $generator = Factory::create();
         $populator = new Populator($generator, $this->getEntityManager());
 
-        $populator->addEntity(self::VFS_NAMESPACE . 'Thing', 1);
+        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1);
+        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 1);
         $populator->execute();
 
         $this->assertDatabaseHas(
-            self::VFS_NAMESPACE . 'Thing',
+            self::VFS_NAMESPACE . 'One',
             []
         );
     }
@@ -38,20 +39,37 @@ class AssertDatabaseHasTest extends AbstractDoctrineAssertTest
         $generator = Factory::create();
         $populator = new Populator($generator, $this->getEntityManager());
 
-        $populator->addEntity(
-            self::VFS_NAMESPACE . 'Thing',
-            1,
+        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 1,
             [
-                'name' => 'Thing'
+                'active' => true
             ]
         );
+        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1);
+        $populator->execute();
 
+        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 1,
+            [
+                'active' => false
+            ]
+        );
+        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1);
         $populator->execute();
 
         $this->assertDatabaseHas(
-            self::VFS_NAMESPACE . 'Thing',
+            self::VFS_NAMESPACE . 'One',
             [
-                'name' => 'Thing'
+                self::VFS_NAMESPACE . 'Two' => [
+                    'active' => true
+                ]
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            self::VFS_NAMESPACE . 'One',
+            [
+                self::VFS_NAMESPACE . 'Two' => [
+                    'active' => false
+                ]
             ]
         );
     }
@@ -63,20 +81,20 @@ class AssertDatabaseHasTest extends AbstractDoctrineAssertTest
         $generator = Factory::create();
         $populator = new Populator($generator, $this->getEntityManager());
 
-        $populator->addEntity(
-            self::VFS_NAMESPACE . 'Thing',
-            1,
+        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 1,
             [
-                'name' => 'Thing'
+                'active' => true
             ]
         );
-
+        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1);
         $populator->execute();
 
         $this->assertDatabaseHas(
-            self::VFS_NAMESPACE . 'Thing',
+            self::VFS_NAMESPACE . 'One',
             [
-                'name' => 'Something'
+                self::VFS_NAMESPACE . 'Two' => [
+                    'active' => false
+                ]
             ]
         );
     }
