@@ -2,6 +2,13 @@
 
 namespace BenRowan\DoctrineAssert\Config;
 
+use function count;
+use Countable;
+use function is_array;
+use Iterator;
+use function key;
+use function reset;
+
 /**
  * Class QueryConfigIterator.
  *
@@ -12,7 +19,7 @@ namespace BenRowan\DoctrineAssert\Config;
  *
  * @package BenRowan\DoctrineAssert\Config
  */
-class QueryConfigIterator implements \Iterator, \Countable
+class QueryConfigIterator implements Iterator, Countable
 {
     /**
      * @var string
@@ -46,7 +53,7 @@ class QueryConfigIterator implements \Iterator, \Countable
      */
     public function currentIsChildConfig(): bool
     {
-        return \is_array($this->current);
+        return is_array($this->current);
     }
 
     /**
@@ -56,7 +63,7 @@ class QueryConfigIterator implements \Iterator, \Countable
      */
     public function currentIsValue(): bool
     {
-        return ! \is_array($this->current);
+        return ! is_array($this->current);
     }
 
     /**
@@ -85,8 +92,8 @@ class QueryConfigIterator implements \Iterator, \Countable
 
     private function shift()
     {
-        $this->current = \reset($this->queryConfig);
-        $this->key     = \key($this->queryConfig);
+        $this->current = reset($this->queryConfig);
+        $this->key     = key($this->queryConfig);
 
         unset($this->queryConfig[$this->key]);
     }
@@ -124,7 +131,7 @@ class QueryConfigIterator implements \Iterator, \Countable
      */
     public function count(): int
     {
-        return \count($this->queryConfig);
+        return count($this->queryConfig);
     }
 
     /**
