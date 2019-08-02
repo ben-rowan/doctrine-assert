@@ -44,10 +44,8 @@ abstract class AbstractDoctrineAssertTest extends TestCase
     public function setUp()
     {
         $this->setupVfs();
-//        vfsStream::inspect(new vfsStreamPrintVisitor());
         $this->setupEntityManager();
         $this->generateEntities();
-//        vfsStream::inspect(new vfsStreamPrintVisitor());
         $this->requireEntities();
         $this->updateSchema();
     }
