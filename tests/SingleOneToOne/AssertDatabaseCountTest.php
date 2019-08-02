@@ -6,6 +6,7 @@ use BenRowan\DoctrineAssert\DoctrineAssertTrait;
 use BenRowan\DoctrineAssert\Tests\AbstractDoctrineAssertTest;
 use Faker\Factory;
 use Faker\ORM\Doctrine\Populator;
+use PHPUnit\Framework\ExpectationFailedException;
 
 class AssertDatabaseCountTest extends AbstractDoctrineAssertTest
 {
@@ -29,6 +30,26 @@ class AssertDatabaseCountTest extends AbstractDoctrineAssertTest
 
         $this->assertDatabaseCount(
             100,
+            self::VFS_NAMESPACE . 'One',
+            [
+                self::VFS_NAMESPACE . 'Two' => []
+            ]
+        );
+    }
+
+    public function testWrongCountFailsTest(): void
+    {
+        $this->expectException(ExpectationFailedException::class);
+
+        $generator = Factory::create();
+        $populator = new Populator($generator, $this->getEntityManager());
+
+        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 100);
+        $populator->addEntity(self::VFS_NAMESPACE . 'One', 100);
+        $populator->execute();
+
+        $this->assertDatabaseCount(
+            50,
             self::VFS_NAMESPACE . 'One',
             [
                 self::VFS_NAMESPACE . 'Two' => []
