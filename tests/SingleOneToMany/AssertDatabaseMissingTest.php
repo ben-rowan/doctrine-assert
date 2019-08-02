@@ -19,16 +19,16 @@ class AssertDatabaseMissingTest extends AbstractDoctrineAssertTest
         return __DIR__ . '/Vfs';
     }
 
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->createEntities();
+    }
+
     public function testSettingNoQueryConfigFails(): void
     {
         $this->expectException(ExpectationFailedException::class);
-
-        $generator = Factory::create();
-        $populator = new Populator($generator, $this->getEntityManager());
-
-        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1);
-        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 2);
-        $populator->execute();
 
         $this->assertDatabaseMissing(
             self::VFS_NAMESPACE . 'One',
@@ -39,22 +39,6 @@ class AssertDatabaseMissingTest extends AbstractDoctrineAssertTest
     public function testSettingMatchingQueryConfigFails(): void
     {
         $this->expectException(ExpectationFailedException::class);
-
-        $generator = Factory::create();
-        $populator = new Populator($generator, $this->getEntityManager());
-
-        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1,
-            [
-                'name' => 'One'
-            ]
-        );
-        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 2,
-            [
-                'name'   => 'Two',
-                'active' => true
-            ]
-        );
-        $populator->execute();
 
         $this->assertDatabaseMissing(
             self::VFS_NAMESPACE . 'One',
@@ -68,7 +52,41 @@ class AssertDatabaseMissingTest extends AbstractDoctrineAssertTest
         );
     }
 
-    public function testSettingNonMatchingQueryConfigPasses(): void
+    /**
+     * @param string $nameOne
+     * @param string $nameTwo
+     * @param bool $active
+     *
+     * @dataProvider nonMatchingQueryConfig
+     */
+    public function testSettingNonMatchingQueryConfigPasses(
+        string $nameOne,
+        string $nameTwo,
+        bool $active
+    ): void {
+
+        $this->assertDatabaseMissing(
+            self::VFS_NAMESPACE . 'One',
+            [
+                'name' => $nameOne,
+                self::VFS_NAMESPACE . 'Two' => [
+                    'name'   => $nameTwo,
+                    'active' => $active
+                ]
+            ]
+        );
+    }
+
+    public function nonMatchingQueryConfig(): array
+    {
+        return [
+            'Name 1 is wrong'           => ['Wrong', 'Two', true],
+            'Name 2 is wrong'           => ['One',   'Wrong',   true],
+            'Name 2 is with wrong bool' => ['One',   'Two', false]
+        ];
+    }
+
+    private function createEntities(): void
     {
         $generator = Factory::create();
         $populator = new Populator($generator, $this->getEntityManager());
@@ -85,16 +103,5 @@ class AssertDatabaseMissingTest extends AbstractDoctrineAssertTest
             ]
         );
         $populator->execute();
-
-        $this->assertDatabaseMissing(
-            self::VFS_NAMESPACE . 'One',
-            [
-                'name' => 'One',
-                self::VFS_NAMESPACE . 'Two' => [
-                    'name'   => 'Two',
-                    'active' => false
-                ]
-            ]
-        );
     }
 }
