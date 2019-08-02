@@ -1,12 +1,12 @@
 # doctrine-assert
 
-A set of PHPUnit database assertions powered by Doctrine.
+A set of PHPUnit database assertions for your Doctrine entities.
 
 ## Usage
 
 ### Trait
 
-To add `doctrine-assert` to your tests you simply `use` the provided trait in your test.
+To add `doctrine-assert` to your tests you simply `use` the provided trait in your test class.
 
 ```php
 use DoctrineAssertTrait;
@@ -109,7 +109,7 @@ $this->assertDatabaseCount(
 If you'd like to extend `doctrine-assert` or create a test case for a bug you've found
 then you'll need to be able to run the tests and create new ones.
 
-### Running The Tests
+### Running Tests
 
 Running the tests should be as simple as:
 
@@ -136,12 +136,12 @@ as it requires coverage to be generated.
 
 #### The Problem
 
-In order to test the library we need to generate large numbers of entities as well
-as create the associated database schema. In order to keep this code self contained
+In order to test the library we need to generate a large number of entities as well
+as create the associated database schema. To keep the code self contained
 and save committing large numbers of test entities into the code base I've decided
 to make use of the virtual file system 
 [vfs://stream](http://vfs.bovigo.org/) and [sqlite](https://sqlite.org/index.html). This
-also has the side benefit of running everything in RAM making the test suite
+has the side benefit of running everything in RAM and making the test suite run
 really fast.
 
 #### How The Test Suite Works
@@ -164,7 +164,7 @@ files that we'll later use to generate our test entities.
 
 ##### Update The Database Schema
 
-### Creating A New Test
+### Creating New Tests
 
 #### Test Structure
 
