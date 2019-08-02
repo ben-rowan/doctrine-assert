@@ -19,46 +19,31 @@ class AssertDatabaseHasTest extends AbstractDoctrineAssertTest
         return __DIR__ . '/Vfs';
     }
 
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->createEntities();
+    }
+
     public function testSettingNoQueryConfigPasses(): void
     {
-        $generator = Factory::create();
-        $populator = new Populator($generator, $this->getEntityManager());
-
-        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1);
-        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 1);
-        $populator->execute();
-
         $this->assertDatabaseHas(
             self::VFS_NAMESPACE . 'One',
-            []
+            [
+                self::VFS_NAMESPACE . 'Two' => []
+            ]
         );
     }
 
     public function testSettingMatchingQueryConfigPasses(): void
     {
-        $generator = Factory::create();
-        $populator = new Populator($generator, $this->getEntityManager());
-
-        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 1,
-            [
-                'active' => true
-            ]
-        );
-        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1);
-        $populator->execute();
-
-        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 1,
-            [
-                'active' => false
-            ]
-        );
-        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1);
-        $populator->execute();
-
         $this->assertDatabaseHas(
             self::VFS_NAMESPACE . 'One',
             [
+                'name' => 'One',
                 self::VFS_NAMESPACE . 'Two' => [
+                    'name'   => 'Two-One',
                     'active' => true
                 ]
             ]
@@ -67,35 +52,77 @@ class AssertDatabaseHasTest extends AbstractDoctrineAssertTest
         $this->assertDatabaseHas(
             self::VFS_NAMESPACE . 'One',
             [
+                'name' => 'One',
                 self::VFS_NAMESPACE . 'Two' => [
+                    'name'   => 'Two-Two',
                     'active' => false
                 ]
             ]
         );
     }
 
-    public function testSettingNonMatchingQueryConfigFails(): void
-    {
+    /**
+     * @param string $nameOne
+     * @param string $nameTwo
+     * @param bool $active
+     *
+     * @dataProvider nonMatchingQueryConfig
+     */
+    public function testSettingNonMatchingQueryConfigFails(
+        string $nameOne,
+        string $nameTwo,
+        bool $active
+    ): void {
         $this->expectException(ExpectationFailedException::class);
-
-        $generator = Factory::create();
-        $populator = new Populator($generator, $this->getEntityManager());
-
-        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 1,
-            [
-                'active' => true
-            ]
-        );
-        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1);
-        $populator->execute();
 
         $this->assertDatabaseHas(
             self::VFS_NAMESPACE . 'One',
             [
+                'name' => $nameOne,
                 self::VFS_NAMESPACE . 'Two' => [
-                    'active' => false
+                    'name'   => $nameTwo,
+                    'active' => $active
                 ]
             ]
         );
+    }
+
+    public function nonMatchingQueryConfig(): array
+    {
+        return [
+            'Name 1 is wrong'              => ['Wrong', 'Two-One', true],
+            'Name 2 is wrong'              => ['One',   'Wrong',   true],
+            'Name 2 with wrong bool'       => ['One',   'Two-One', false],
+            'Name 2 with wrong bool again' => ['One',   'Two-Two', true],
+        ];
+    }
+
+    private function createEntities(): void
+    {
+        $generator = Factory::create();
+        $populator = new Populator($generator, $this->getEntityManager());
+
+        $populator->addEntity(self::VFS_NAMESPACE . 'Two', 2,
+            [
+                'name' => $this->createGenerator(
+                    [
+                        'Two-One',
+                        'Two-Two'
+                    ]
+                ),
+                'active' => $this->createGenerator(
+                    [
+                        true,
+                        false
+                    ]
+                )
+            ]
+        );
+        $populator->addEntity(self::VFS_NAMESPACE . 'One', 2,
+            [
+                'name' => 'One'
+            ]
+        );
+        $populator->execute();
     }
 }
