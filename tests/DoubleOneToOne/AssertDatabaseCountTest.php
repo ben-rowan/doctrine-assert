@@ -3,20 +3,15 @@
 namespace BenRowan\DoctrineAssert\Tests\DoubleOneToOne;
 
 use BenRowan\DoctrineAssert\DoctrineAssertTrait;
-use BenRowan\DoctrineAssert\Tests\AbstractDoctrineTest;
+use BenRowan\DoctrineAssert\Tests\AbstractDoctrineAssertTest;
 use Faker\Factory;
 use Faker\ORM\Doctrine\Populator;
 
-class AssertDatabaseCountTest extends AbstractDoctrineTest
+class AssertDatabaseCountTest extends AbstractDoctrineAssertTest
 {
     public const VFS_NAMESPACE = 'Vfs\\DoubleOneToOne\\';
 
     use DoctrineAssertTrait;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
 
     protected function getVfsPath(): string
     {

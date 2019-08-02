@@ -2,18 +2,19 @@
 
 namespace BenRowan\DoctrineAssert\Tests;
 
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 use Doctrine\ORM\Tools\EntityGenerator;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\ToolsException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder;
 
-
-abstract class AbstractDoctrineTest extends TestCase
+abstract class AbstractDoctrineAssertTest extends TestCase
 {
     public const CONFIG_PATH = '/config';
 
@@ -35,7 +36,7 @@ abstract class AbstractDoctrineTest extends TestCase
     private $rootDir;
 
     /**
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function setUp()
     {
@@ -71,7 +72,7 @@ abstract class AbstractDoctrineTest extends TestCase
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     private function setupEntityManager(): void
     {
@@ -167,7 +168,7 @@ abstract class AbstractDoctrineTest extends TestCase
     }
 
     /**
-     * @throws \Doctrine\ORM\Tools\ToolsException
+     * @throws ToolsException
      */
     private function updateSchema(): void
     {
