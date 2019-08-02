@@ -19,14 +19,15 @@ class AssertDatabaseHasTest extends AbstractDoctrineAssertTest
         return __DIR__ . '/Vfs';
     }
 
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->createEntities();
+    }
+
     public function testSettingNoQueryConfigPasses(): void
     {
-        $generator = Factory::create();
-        $populator = new Populator($generator, $this->getEntityManager());
-
-        $populator->addEntity(self::VFS_NAMESPACE . 'Thing', 1);
-        $populator->execute();
-
         $this->assertDatabaseHas(
             self::VFS_NAMESPACE . 'Thing',
             []
@@ -35,19 +36,6 @@ class AssertDatabaseHasTest extends AbstractDoctrineAssertTest
 
     public function testSettingMatchingQueryConfigPasses(): void
     {
-        $generator = Factory::create();
-        $populator = new Populator($generator, $this->getEntityManager());
-
-        $populator->addEntity(
-            self::VFS_NAMESPACE . 'Thing',
-            1,
-            [
-                'name' => 'Thing'
-            ]
-        );
-
-        $populator->execute();
-
         $this->assertDatabaseHas(
             self::VFS_NAMESPACE . 'Thing',
             [
@@ -60,6 +48,16 @@ class AssertDatabaseHasTest extends AbstractDoctrineAssertTest
     {
         $this->expectException(ExpectationFailedException::class);
 
+        $this->assertDatabaseHas(
+            self::VFS_NAMESPACE . 'Thing',
+            [
+                'name' => 'Something'
+            ]
+        );
+    }
+
+    private function createEntities(): void
+    {
         $generator = Factory::create();
         $populator = new Populator($generator, $this->getEntityManager());
 
@@ -72,12 +70,5 @@ class AssertDatabaseHasTest extends AbstractDoctrineAssertTest
         );
 
         $populator->execute();
-
-        $this->assertDatabaseHas(
-            self::VFS_NAMESPACE . 'Thing',
-            [
-                'name' => 'Something'
-            ]
-        );
     }
 }

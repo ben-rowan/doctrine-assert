@@ -19,15 +19,16 @@ class AssertDatabaseMissingTest extends AbstractDoctrineAssertTest
         return __DIR__ . '/Vfs';
     }
 
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->createEntities();
+    }
+
     public function testSettingNoQueryConfigFails(): void
     {
         $this->expectException(ExpectationFailedException::class);
-
-        $generator = Factory::create();
-        $populator = new Populator($generator, $this->getEntityManager());
-
-        $populator->addEntity(self::VFS_NAMESPACE . 'Thing', 1);
-        $populator->execute();
 
         $this->assertDatabaseMissing(
             self::VFS_NAMESPACE . 'Thing',
@@ -39,19 +40,6 @@ class AssertDatabaseMissingTest extends AbstractDoctrineAssertTest
     {
         $this->expectException(ExpectationFailedException::class);
 
-        $generator = Factory::create();
-        $populator = new Populator($generator, $this->getEntityManager());
-
-        $populator->addEntity(
-            self::VFS_NAMESPACE . 'Thing',
-            1,
-            [
-                'name' => 'Thing'
-            ]
-        );
-
-        $populator->execute();
-
         $this->assertDatabaseMissing(
             self::VFS_NAMESPACE . 'Thing',
             [
@@ -61,6 +49,16 @@ class AssertDatabaseMissingTest extends AbstractDoctrineAssertTest
     }
 
     public function testSettingNonMatchingQueryConfigPasses(): void
+    {
+        $this->assertDatabaseMissing(
+            self::VFS_NAMESPACE . 'Thing',
+            [
+                'name' => 'Something'
+            ]
+        );
+    }
+
+    private function createEntities(): void
     {
         $generator = Factory::create();
         $populator = new Populator($generator, $this->getEntityManager());
@@ -74,12 +72,5 @@ class AssertDatabaseMissingTest extends AbstractDoctrineAssertTest
         );
 
         $populator->execute();
-
-        $this->assertDatabaseMissing(
-            self::VFS_NAMESPACE . 'Thing',
-            [
-                'name' => 'Something'
-            ]
-        );
     }
 }
