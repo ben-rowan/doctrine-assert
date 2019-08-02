@@ -5,6 +5,13 @@ namespace BenRowan\DoctrineAssert\Tests;
 use function count;
 use RuntimeException;
 
+/**
+ * Trait GeneratorTrait
+ *
+ * @package BenRowan\DoctrineAssert\Tests
+ *
+ * @SuppressWarnings(PHPMD.UnusedLocalVariable) - Mess Detector is getting confused by $current
+ */
 trait GeneratorTrait
 {
     protected function createGenerator(array $data): callable

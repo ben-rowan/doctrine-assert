@@ -14,7 +14,7 @@ echo "
     Running PHPMD
 ";
 
-${binDir}phpmd src,tests text cleancode,codesize,controversial,design,naming,unusedcode;
+${binDir}phpmd src,tests text ./phpmd.ruleset.xml;
 
 echo "
     Running Tests

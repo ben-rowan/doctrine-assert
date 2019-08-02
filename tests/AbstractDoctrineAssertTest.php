@@ -9,6 +9,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\ToolsException;
+use InvalidArgumentException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
@@ -100,7 +101,7 @@ abstract class AbstractDoctrineAssertTest extends TestCase
         $allMetadata = $classMetadataFactory->getAllMetadata();
 
         if (empty($allMetadata)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'You need to configure a set of entity Fixtures for this test'
             );
         }
@@ -108,7 +109,7 @@ abstract class AbstractDoctrineAssertTest extends TestCase
         $destinationPath = $this->rootDir->url();
 
         if (! file_exists($destinationPath)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'Entities destination directory %s does not exist.',
                     $destinationPath
@@ -117,7 +118,7 @@ abstract class AbstractDoctrineAssertTest extends TestCase
         }
 
         if (! is_writable($destinationPath)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'Entities destination directory %s does not have write permissions.',
                     $destinationPath
@@ -179,7 +180,7 @@ abstract class AbstractDoctrineAssertTest extends TestCase
             ->getAllMetadata();
 
         if (empty($allMetadata)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'You need to configure a set of entity Fixtures for this test'
             );
         }

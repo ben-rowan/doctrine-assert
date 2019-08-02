@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="Doctrine Assert">
+
+    <description>Rule set for Doctrine Assert</description>
+
+    <rule ref="rulesets/cleancode.xml" >
+        <exclude name="StaticAccess"/>
+    </rule>
+    <rule ref="rulesets/codesize.xml" />
+    <rule ref="rulesets/controversial.xml" />
+    <rule ref="rulesets/design.xml" />
+    <rule ref="rulesets/naming.xml" />
+    <rule ref="rulesets/unusedcode.xml" />
+</ruleset>
