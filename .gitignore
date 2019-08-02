@@ -1,3 +1,14 @@
-/vendor
+vendor/
 composer.lock
 .idea
+
+# Ignore the contents of var/ while keeping the directory structure
+!var/
+var/*
+!var/coverage/
+var/coverage/*
+!var/infection/
+var/infection/*
+
+# Don't ignore any .gitkeep files
+!*.gitkeep
