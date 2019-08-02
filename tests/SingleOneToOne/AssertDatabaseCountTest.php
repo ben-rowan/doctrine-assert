@@ -23,8 +23,8 @@ class AssertDatabaseCountTest extends AbstractDoctrineAssertTest
         $generator = Factory::create();
         $populator = new Populator($generator, $this->getEntityManager());
 
-        $populator->addEntity(self::VFS_NAMESPACE . 'One', 100);
         $populator->addEntity(self::VFS_NAMESPACE . 'Two', 100);
+        $populator->addEntity(self::VFS_NAMESPACE . 'One', 100);
         $populator->execute();
 
         $this->assertDatabaseCount(
