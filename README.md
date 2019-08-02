@@ -144,9 +144,9 @@ to make use of the virtual file system
 has the side benefit of running everything in RAM and making the test suite run
 really fast.
 
-#### How The Test Suite Works
-
-_Feel free to skip this section and move straight on to 'Creating A New Test'_
+#### How The Testing Framework Works
+_Feel free to skip this section and move straight on to
+'[Creating New Tests](https://github.com/ben-rowan/doctrine-assert#creating-new-tests)'_
 
 The following process takes place before each test is run using `setUp()`.
 
