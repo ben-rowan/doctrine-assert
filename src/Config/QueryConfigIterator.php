@@ -2,6 +2,7 @@
 
 namespace BenRowan\DoctrineAssert\Config;
 
+use BenRowan\DoctrineAssert\Exceptions\DoctrineAssertException;
 use function count;
 use Countable;
 use function is_array;
@@ -93,7 +94,7 @@ class QueryConfigIterator implements Iterator, Countable
     private function shift()
     {
         $this->current = reset($this->queryConfig);
-        $this->key     = key($this->queryConfig);
+        $this->key     = (string)key($this->queryConfig);
 
         unset($this->queryConfig[$this->key]);
     }
@@ -141,6 +142,12 @@ class QueryConfigIterator implements Iterator, Countable
      */
     public function toJson(): string
     {
-        return json_encode($this->queryConfig, JSON_PRETTY_PRINT);
+        $json = json_encode($this->queryConfig, JSON_PRETTY_PRINT);
+
+        if (false === $json) {
+            throw new DoctrineAssertException('Unable to encode query config as JSON');
+        }
+
+        return $json;
     }
 }

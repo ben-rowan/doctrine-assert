@@ -26,11 +26,11 @@
     }
   },
   "require-dev": {
-    "ext-sqlite":  "*",
-    "phpstan/phpstan": "^0.9.2",
+    "ext-sqlite3":  "*",
     "phpmd/phpmd" : "@stable",
     "mikey179/vfsstream": "^1.6",
     "symfony/yaml": "^4.0",
-    "fzaninotto/faker": "^1.7"
+    "fzaninotto/faker": "^1.7",
+    "phpstan/phpstan": "^0.11.12"
   }
 }
