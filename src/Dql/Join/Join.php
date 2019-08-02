@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace BenRowan\DoctrineAssert\Dql\AssertJoin;
+namespace BenRowan\DoctrineAssert\Dql\Join;
 
 use BenRowan\DoctrineAssert\Exceptions\DoctrineAssertException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\Query\Expr\Join as DoctrineJoin;
 
-class AssertJoin implements AssertJoinInterface
+class Join implements JoinInterface
 {
     private $queryBuilder;
 
@@ -93,7 +93,7 @@ class AssertJoin implements AssertJoinInterface
         $this->queryBuilder->join(
             $childEntityFqn,
             $childAlias,
-            Join::WITH,
+            DoctrineJoin::WITH,
             $condition
         );
     }

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace BenRowan\DoctrineAssert\Dql\AssertJoin;
+namespace BenRowan\DoctrineAssert\Dql\Join;
 
-interface AssertJoinInterface
+interface JoinInterface
 {
     public function add(
         string $childEntityFqn,

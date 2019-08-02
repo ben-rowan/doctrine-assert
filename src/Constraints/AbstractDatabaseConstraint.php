@@ -3,8 +3,8 @@
 namespace BenRowan\DoctrineAssert\Constraints;
 
 use BenRowan\DoctrineAssert\Config\QueryConfigIterator;
-use BenRowan\DoctrineAssert\Dql\AssertJoin\AssertJoin;
-use BenRowan\DoctrineAssert\Dql\AssertJoin\AssertJoinInterface;
+use BenRowan\DoctrineAssert\Dql\Join\Join;
+use BenRowan\DoctrineAssert\Dql\Join\JoinInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -23,7 +23,7 @@ abstract class AbstractDatabaseConstraint extends Constraint
     private $entityManager;
 
     /**
-     * @var AssertJoinInterface
+     * @var JoinInterface
      */
     private $join;
 
@@ -33,7 +33,7 @@ abstract class AbstractDatabaseConstraint extends Constraint
 
         $this->entityManager = $entityManager;
         $this->queryBuilder  = $entityManager->createQueryBuilder();
-        $this->join          = new AssertJoin($this->queryBuilder, $this->entityManager);
+        $this->join          = new Join($this->queryBuilder, $this->entityManager);
     }
 
     /**
