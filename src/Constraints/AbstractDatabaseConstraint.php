@@ -3,7 +3,7 @@
 namespace BenRowan\DoctrineAssert\Constraints;
 
 use BenRowan\DoctrineAssert\Config\QueryConfigIterator;
-use BenRowan\DoctrineAssert\Dql\Join\Join;
+use BenRowan\DoctrineAssert\Dql\Join;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;

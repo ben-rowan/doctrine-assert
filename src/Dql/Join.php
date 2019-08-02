@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace BenRowan\DoctrineAssert\Dql\Join;
+namespace BenRowan\DoctrineAssert\Dql;
 
 use BenRowan\DoctrineAssert\Exceptions\DoctrineAssertException;
 use Doctrine\ORM\EntityManagerInterface;
