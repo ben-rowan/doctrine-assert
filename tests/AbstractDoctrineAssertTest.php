@@ -65,6 +65,9 @@ abstract class AbstractDoctrineAssertTest extends TestCase
         return $this->entityManager;
     }
 
+    /**
+     * Setup the virtual file system for our entities to live in.
+     */
     private function setupVfs(): void
     {
         $this->rootDir = vfsStream::setup();
@@ -73,6 +76,9 @@ abstract class AbstractDoctrineAssertTest extends TestCase
     }
 
     /**
+     * Using the YAML mapping file config and an SQLite database setup
+     * the entity manager for this test.
+     *
      * @throws ORMException
      */
     private function setupEntityManager(): void
@@ -92,6 +98,10 @@ abstract class AbstractDoctrineAssertTest extends TestCase
         $this->entityManager = EntityManager::create($connection, $config);
     }
 
+    /**
+     * Based on the YAML mapping files generate a set of entities in our virtual
+     * file system.
+     */
     private function generateEntities(): void
     {
         $classMetadataFactory = new DisconnectedClassMetadataFactory();
@@ -136,24 +146,53 @@ abstract class AbstractDoctrineAssertTest extends TestCase
         $entityGenerator->generate($allMetadata, $destinationPath);
     }
 
-    private function removeYmlFileExtension($fileName): string
+    /**
+     * Drops the yml file extension from the end of the filename
+     *
+     * @param string $ymlPath
+     *
+     * @return string
+     */
+    private function removeYmlFileExtension(string $ymlPath): string
     {
-        $extensionLen = strlen('.dcm.yml');
-        return substr($fileName, 0, -$extensionLen);
+        // We don't use basename here because we want to keep the path
+
+        return str_replace('.dcm.yml', '', $ymlPath);
     }
 
-    private function ymlFileNameToPath($fileName): string
+    /**
+     * Converts the YAML mapping file path into the path of it's associated
+     * generated entity.
+     *
+     * @param string $ymlPath
+     *
+     * @return string
+     */
+    private function ymlPathToEntityPath(string $ymlPath): string
     {
-        return str_replace('.', '/', $fileName) . '.php';
+        $withoutExtension = $this->removeYmlFileExtension($ymlPath);
+
+        return str_replace('.', '/', $withoutExtension) . '.php';
     }
 
-    private function ymlFileNameToVfsPath($fileName): string
+    /**
+     * Returns the path of the associated generated entity in the virtual file
+     * system for this YAML mapping file.
+     *
+     * @param string $ymlPath
+     *
+     * @return string
+     */
+    private function ymlPathToVfsEntityPath(string $ymlPath): string
     {
         $vfsRoot = $this->getRootDir()->url();
 
-        return $vfsRoot . '/' . $this->ymlFileNameToPath($this->removeYmlFileExtension($fileName));
+        return $vfsRoot . '/' . $this->ymlPathToEntityPath($ymlPath);
     }
 
+    /**
+     * Requires all the generated entities so we can use them.
+     */
     private function requireEntities(): void
     {
         $finder = new Finder();
@@ -161,14 +200,16 @@ abstract class AbstractDoctrineAssertTest extends TestCase
         $finder->files()->in($this->getVfsPath() . self::CONFIG_PATH);
 
         foreach ($finder as $file) {
-            $name       = $file->getFilename();
-            $entityPath = $this->ymlFileNameToVfsPath($name);
+            $filename = $file->getFilename();
+            $entity   = $this->ymlPathToVfsEntityPath($filename);
 
-            require_once $entityPath;
+            require_once $entity;
         }
     }
 
     /**
+     * Update the database schema to match our set of entities
+     *
      * @throws ToolsException
      */
     private function updateSchema(): void
