@@ -134,20 +134,20 @@ as it requires coverage to be generated.
 
 ### Testing Framework
 
+_Feel free to skip this section and move straight on to
+'[Creating New Tests](https://github.com/ben-rowan/doctrine-assert#creating-new-tests)'_
+
 #### The Problem
 
 In order to test the library we need to generate a large number of entities as well
 as create the associated database schema. To keep the code self contained
-and save committing large numbers of test entities into the code base I've decided
-to make use of the virtual file system 
+and save committing large numbers of test entities into the code base we make use of
+the virtual file system 
 [vfs://stream](http://vfs.bovigo.org/) and [sqlite](https://sqlite.org/index.html). This
-has the side benefit of running everything in RAM and making the test suite run
-really fast.
+has the added side benefit of running everything in RAM making the test suite run
+as fast as possible.
 
 #### How The Testing Framework Works
-
-_Feel free to skip this section and move straight on to
-'[Creating New Tests](https://github.com/ben-rowan/doctrine-assert#creating-new-tests)'_
 
 The following process takes place before each test is run and is managed by
 [`AbstractDoctrineAssertTest`](./tests/AbstractDoctrineAssertTest.php).
