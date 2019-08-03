@@ -223,12 +223,24 @@ class YourTest extends AbstractDoctrineAssertTest
         $this->createEntities();
     }
 
-    public function testSomething(): void
+    public function testSomethingPasses(): void
     {
         $this->assertDatabaseHas(
             self::VFS_NAMESPACE . 'One',
             [
-                'something' => 'to assert'
+                'test' => 'passes'
+            ]
+        );
+    }
+    
+    public function testSomethingFails(): void
+    {
+        $this->expectException(ExpectationFailedException::class);
+    
+        $this->assertDatabaseHas(
+            self::VFS_NAMESPACE . 'One',
+            [
+                'test' => 'fails'
             ]
         );
     }
@@ -240,7 +252,7 @@ class YourTest extends AbstractDoctrineAssertTest
 
         $populator->addEntity(self::VFS_NAMESPACE . 'One', 1,
             [
-                'something' => 'to assert'
+                'test' => 'passes'
             ]
         );
 
