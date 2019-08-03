@@ -172,7 +172,7 @@ After we've setup the entity manager we can use it's meta data and an
 to create the tests entities. Before we can use these we also need to loop
 through and require them.
 
-##### Update Database Schema
+##### Update Schema
 
 Finally we update the database schema to match our entities and we're good to go.
 
