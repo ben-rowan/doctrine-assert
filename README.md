@@ -145,24 +145,36 @@ has the side benefit of running everything in RAM and making the test suite run
 really fast.
 
 #### How The Testing Framework Works
+
 _Feel free to skip this section and move straight on to
 '[Creating New Tests](https://github.com/ben-rowan/doctrine-assert#creating-new-tests)'_
 
-The following process takes place before each test is run using `setUp()`.
+The following process takes place before each test is run and is managed by
+[`AbstractDoctrineAssertTest`](./tests/AbstractDoctrineAssertTest.php).
 
 ##### Virtual File System
 
-We first setup the [virtual file system](http://vfs.bovigo.org/). We copy over the Doctrine
+We first initialise the [virtual file system](http://vfs.bovigo.org/) before copying over
+the Doctrine
 [YAML mapping](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/yaml-mapping.html)
 files that we'll later use to generate our test entities.
 
 ##### Setup The Entity Manager
 
+Now we setup the entity manager with our YAML mapping config and an in memory SQLite
+database. The database is recreated before each test run making sure we have no leakage
+between tests.
+
 ##### Generate The Entities
 
-##### Require The Generated Entities
+After we've setup the entity manager we can use it's meta data and an
+[`EntityGenerator`](https://github.com/doctrine/orm/blob/2.6/lib/Doctrine/ORM/Tools/EntityGenerator.php)
+to create the tests entities. Before we can use these we also need to loop
+through and require them.
 
 ##### Update The Database Schema
+
+Finally we update the database schema to match our entities and we're good to go.
 
 ### Creating New Tests
 
@@ -176,8 +188,8 @@ DoubleOneToOne
 └── Vfs
     └── config
         ├── Vfs.DoubleOneToOne.One.dcm.yml
-        ├── Vfs.DoubleOneToOne.Three.dcm.yml
-        └── Vfs.DoubleOneToOne.Two.dcm.yml
+        ├── Vfs.DoubleOneToOne.Two.dcm.yml
+        └── Vfs.DoubleOneToOne.Three.dcm.yml
 ```
 
 Tests are structured based on the types of entities they'd like to test against, all tests using
