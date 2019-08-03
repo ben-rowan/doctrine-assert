@@ -176,9 +176,7 @@ through and require them.
 
 Finally we update the database schema to match our entities and we're good to go.
 
-### Creating New Tests
-
-#### Test Structure
+### Test Structure
 
 ```text
 DoubleOneToOne
@@ -198,14 +196,106 @@ can minimise the number of entity sets that we need to define.
 
 Next we have the virtual file system `Vfs/` that will be used by any tests within this folder. Within
 `Vfs/config` we define our test entities using Doctrine's
-[YAML Mapping](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/yaml-mapping.html) format. 
+[YAML Mapping](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/yaml-mapping.html) format.
+The YAML filename should match the class name defined inside so `Vfs\DoubleOneToOne\One`
+becomes `Vfs.DoubleOneToOne.One` with `.dcm.yml` on the end `Vfs.DoubleOneToOne.One.dcm.yml`.
 
-#### Define The Entities
+### Creating A Test
 
-#### Create Test File
+Here's the basic outline of a test.
 
-#### Create Test
+```php
+class YourTest extends AbstractDoctrineAssertTest
+{
+    public const VFS_NAMESPACE = 'Vfs\\YourTest\\';
 
-##### Setup Fixture Data
+    use DoctrineAssertTrait;
 
-##### Make Assertion
+    protected function getVfsPath(): string
+    {
+        return __DIR__ . '/Vfs';
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->createEntities();
+    }
+
+    public function testSomething(): void
+    {
+        $this->assertDatabaseHas(
+            self::VFS_NAMESPACE . 'One',
+            [
+                'something' => 'to assert'
+            ]
+        );
+    }
+
+    private function createEntities(): void
+    {
+        $generator = Factory::create();
+        $populator = new Populator($generator, $this->getEntityManager());
+
+        $populator->addEntity(self::VFS_NAMESPACE . 'One', 1,
+            [
+                'something' => 'to assert'
+            ]
+        );
+
+        // ...
+
+        $populator->execute();
+    }
+}
+```
+
+#### Define Entities
+
+If the entities that we need for our test don't already exist then we create a directory
+for our tests and YAML files that define all the entities our test will require. If the
+entities do exist then we can simply add our new test to that directory.
+
+#### Create Test Class
+
+Now we create a test class. The class _must_ extend
+[`AbstractDoctrineAssertTest`](./tests/AbstractDoctrineAssertTest.php).
+
+You'll also want to `use`
+[`DoctrineAssertTrait`](https://github.com/ben-rowan/doctrine-assert/blob/master/src/DoctrineAssertTrait.php)
+so that you can make test assertions with it.
+
+#### Create Test Method
+
+We now create one method for each item we'd like to test (as normal).
+
+#### Setup Fixture Data
+
+You can setup the fixture data you require for your test using
+[Fakers generators and populators](https://github.com/fzaninotto/Faker#populating-entities-using-an-orm-or-an-odm).
+
+```php
+$generator = Factory::create();
+$populator = new Populator($generator, $this->getEntityManager());
+
+$populator->addEntity(self::VFS_NAMESPACE . 'Three', 1,
+    [
+        'name' => 'Three'
+    ]
+);
+
+// ...
+
+$populator->execute();
+```
+
+#### Make Assertion
+
+Finally you'll use to the `doctrine-assert` assertions to make an assertion. If you'd
+like to test that an assertion correctly fails then you can simply expect the
+`ExpectationFailedException`.
+
+```php
+$this->expectException(ExpectationFailedException::class);
+```
