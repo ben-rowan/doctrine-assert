@@ -159,20 +159,20 @@ the Doctrine
 [YAML mapping](https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/yaml-mapping.html)
 files that we'll later use to generate our test entities.
 
-##### Setup The Entity Manager
+##### Entity Manager
 
 Now we setup the entity manager with our YAML mapping config and an in memory SQLite
 database. The database is recreated before each test run making sure we have no leakage
 between tests.
 
-##### Generate The Entities
+##### Generate Entities
 
 After we've setup the entity manager we can use it's meta data and an
 [`EntityGenerator`](https://github.com/doctrine/orm/blob/2.6/lib/Doctrine/ORM/Tools/EntityGenerator.php)
 to create the tests entities. Before we can use these we also need to loop
 through and require them.
 
-##### Update The Database Schema
+##### Update Database Schema
 
 Finally we update the database schema to match our entities and we're good to go.
 
