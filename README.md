@@ -18,7 +18,7 @@ To add `doctrine-assert` to your tests you simply `use` the provided trait in yo
 use DoctrineAssertTrait;
 ```
 
-And implement method `getEntityManager(): EntityManager` which allows the trait to access your
+And implement a `getEntityManager(): EntityManager` method which allows the trait to access your
 tests entity manager.
 
 You now have access to the following assertions.
