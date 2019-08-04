@@ -12,13 +12,14 @@ composer require --dev ben-rowan/doctrine-assert
 
 ### Trait
 
-To add `doctrine-assert` to your tests you simply `use` the provided trait in your test class.
+To add `doctrine-assert` to your tests you simply `use` the provided trait in your test class:
 
 ```php
 use DoctrineAssertTrait;
 ```
 
-And implement a method `getEntityManager` which allows the trait to access your tests entity manager.
+And implement method `getEntityManager(): EntityManager` which allows the trait to access your
+tests entity manager.
 
 You now have access to the following assertions.
 
