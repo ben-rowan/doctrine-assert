@@ -2,6 +2,12 @@
 
 A set of PHPUnit database assertions for your Doctrine entities.
 
+## Install
+
+```bash
+composer require --dev ben-rowan/doctrine-assert
+```
+
 ## Usage
 
 ### Trait
